@@ -1,41 +1,84 @@
 package kotlinversion
 
-class Node(var data: Int) {
+import kotlin.math.absoluteValue
 
-    var following: Node? = null
+class Node(var data: Data) {
 
-    fun appendToEnd(data: Int) {
+    var nextNode: Node? = null
+    var length : Int = 0
+    fun appendToEnd(data: Data) {
         val end = Node(data)
         var n: Node? = this
-        while (n!!.following != null) {
-            n = n.following
+        while (n!!.nextNode != null) {
+            n = n.nextNode
         }
-        n.following = end
+        n.nextNode = end
+        length++
     }
 
-    // TODO:: Implement to return the length of the SinglyLinkedList
-    // For example:: --> 5 --> 6 --> 7 --> 3 --> .
-    fun printNodes() {}
+    fun printNodes() {
+        var result = ""
+        var n = this
+        while (n.nextNode != null){
+            result += n.data.x.toString() +","+ n.data.y.toString()
+            if(n.nextNode != null){
+                result += " --> "
+            }
+            n = n.nextNode!!
+        }
+        result += n.data.x.toString() +","+ n.data.y.toString()
+        println(result)
+    }
 
-    // TODO:: Implement to return the length of the SinglyLinkedList
     fun length(h: Node?): Int {
-        return 0
+        return length
     }
 
-    // TODO:: Implement to return the sum of the Nodes
     fun sumOfNodes(): Int {
-        return 0
+        var result = 0
+        val firstNode =  this
+        val secondNode = firstNode.nextNode
+        while (firstNode.nextNode != null){
+
+            result += shortestPath(firstNode , firstNode.nextNode!!) * 2
+
+            firstNode.nextNode = firstNode.nextNode!!.nextNode
+
+        }
+
+        firstNode.nextNode = secondNode
+
+        return result
     }
 
-    fun deleteNode(head: Node, data: Int): Node? {
+    private fun shortestPath(firstNode: Node, nextNode: Node): Int {
+
+        val x = (firstNode.data.x - nextNode.data.x).absoluteValue
+
+        val y = (firstNode.data.y - nextNode.data.y).absoluteValue
+
+        return x+y
+    }
+
+    fun deleteNode(head: Node, data: Data): Node? {
         val n: Node = head
 
         if(n.data == data) {
-            return head.following
+            return head.nextNode
         }
-        // TODO:: Implement the proper loop in order to remove given data
 
-        //
+        var current = head
+        while (current.nextNode != null){
+            if(current.nextNode!!.data == data){
+                current.nextNode = current.nextNode!!.nextNode
+                return current
+            }
+            current = current.nextNode!!
+        }
+
         return head
     }
+
+
 }
+data class Data(val x : Int, val y:Int)
